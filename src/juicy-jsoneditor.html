@@ -1,0 +1,87 @@
+<!-- Import Polymer -->
+<!-- <link rel="import" href="../../polymer/polymer.html"> -->
+<script type="text/javascript" src="../../jsoneditor/jsoneditor.min.js"></script>
+<script type="text/javascript" src="../../jsoneditor/asset/ace/ace.js"></script>
+
+<!-- Define your custom element -->
+<polymer-element name="juicy-jsoneditor" attributes="json mode modes name search indentation">
+    <template>
+        <link rel="stylesheet" type="text/css" href="../../jsoneditor/jsoneditor.min.css">
+        <style>
+            :host{
+                display: block;
+            }
+            #jsoneditorContainer{
+                height: 100%;
+            }
+        </style>
+        <div id="jsoneditorContainer"></div>
+    </template>
+    <script>
+    (function(){
+        var JSONEditorAPI = 
+            ["set","setMode","setName","setText","get","getName","getText"];
+        Polymer('juicy-jsoneditor', {
+            json: {},
+            editor: null,
+            modes:[],
+            search: true,
+            attached: function() {
+                var that = this;
+                var options = {
+                    mode: this.mode,
+                    history: this.history,
+                    name: this.name,
+                    modes: this.modes,
+                    search: this.search,
+                    indentation: this.indentation,
+
+                    change: function editorChanged(){
+                        if(that.editor){
+                            // perform shallow clone, as josdejong/jsoneditor does not return changes
+                            // and we would like to keep at least root json object not replaced.
+                            var newJson = that.editor.get();
+                            var oldJson = that.json;
+                            // add || update 
+                            for (var newProperty in newJson) {
+                                if (newJson.hasOwnProperty(newProperty) && newJson.propertyIsEnumerable(newProperty)) {
+                                    oldJson[newProperty] = newJson[newProperty];
+                                }
+                            }
+                            // remove
+                            for (var oldProperty in oldJson) {
+                                if( !newJson.hasOwnProperty(oldProperty) &&
+                                    oldJson.hasOwnProperty(oldProperty)  && 
+                                    oldJson.propertyIsEnumerable(oldProperty)
+                                ){
+                                    delete oldJson[oldProperty]; 
+                                }
+                            }
+                        }
+                    }
+                };
+
+                this.editor = new JSONEditor(this.$.jsoneditorContainer, options);
+                this.editor.set(this.json);
+                Object.observe( this.json, function somethingChanged(){
+                    that.editor.set(that.json);
+                });  
+
+                // Delegate JSONEditor API
+                var apiNo = JSONEditorAPI.length;
+                while(apiNo--){
+                    this[ JSONEditorAPI[apiNo] ] = this.editor[ JSONEditorAPI[apiNo] ].bind( this.editor );
+                }
+
+            },
+            modeChanged: function modeChanged(){
+                this.editor.setMode(this.mode);
+            },
+            nameChanged: function nameChanged(){
+                this.editor.setName(this.name);
+            }
+        });
+    }());
+    </script>
+
+</polymer-element>
