@@ -40,6 +40,7 @@
                         if(that.editor){
                             // perform shallow clone, as josdejong/jsoneditor does not return changes
                             // and we would like to keep at least root json object not replaced.
+                            // josdejong/jsoneditor#87
                             var newJson = that.editor.get();
                             var oldJson = that.json;
                             // add || update 
@@ -65,7 +66,13 @@
                 this.editor.set(this.json);
 
                 function somethingChanged(){
-                    that.editor.set(that.json);
+                    // Performance killer!, but without 
+                    // josdejong/jsoneditor#39 (josdejong/jsoneditor#79)
+                    // josdejong/jsoneditor#87
+                    // we cannot do much better
+                    if(JSON.stringify(that.json) != that.editor.getText() ){
+                        that.editor.set(that.json);
+                    }
                 }
 
                 if( typeof Object.observe !== 'function' ){
@@ -91,5 +98,7 @@
         });
     }());
     </script>
+
+}
 
 </polymer-element>
