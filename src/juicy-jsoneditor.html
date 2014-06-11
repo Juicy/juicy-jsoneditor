@@ -63,9 +63,17 @@
 
                 this.editor = new JSONEditor(this.$.jsoneditorContainer, options);
                 this.editor.set(this.json);
-                Object.observe( this.json, function somethingChanged(){
+
+                function somethingChanged(){
                     that.editor.set(that.json);
-                });  
+                }
+
+                if( typeof Object.observe !== 'function' ){
+                    var polyfillObserver = new ObjectObserver( that.json );
+                    polyfillObserver.open( somethingChanged );
+                } else {
+                    Object.observe( this.json, somethingChanged );                     
+                } 
 
                 // Delegate JSONEditor API
                 var apiNo = JSONEditorAPI.length;
