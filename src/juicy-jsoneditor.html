@@ -90,10 +90,10 @@
 
             },
             modeChanged: function modeChanged(){
-                this.editor.setMode(this.mode);
+                this.editor && this.editor.setMode(this.mode);
             },
             nameChanged: function nameChanged(){
-                this.editor.setName(this.name);
+                this.editor && this.editor.setName(this.name);
             }
         });
     }());

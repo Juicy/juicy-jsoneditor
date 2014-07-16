@@ -21,8 +21,8 @@ Or [download as ZIP](https://github.com/juicy/juicy-jsoneditor/archive/master.zi
 1. Import Web Components' polyfill:
 
     ```html
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/polymer/0.3.1/platform.js"></script>
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/polymer/0.3.1/polymer.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/polymer/0.3.4/platform.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/polymer/0.3.4/polymer.js"></script>
     ```
 
 2. Import Custom Element:
