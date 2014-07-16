@@ -29,6 +29,8 @@ Or [download as ZIP](https://github.com/juicy/juicy-jsoneditor/archive/master.zi
 
     ```html
     <link rel="import" href="bower_components/juicy-jsoneditor/dist/juicy-jsoneditor.html">
+    <!-- josdejong/jsoneditor#104 workaround-->
+    <link rel="stylesheet" type="text/css" href="bower_components/jsoneditor/jsoneditor.min.css">
     ```
 
 3. Start using it!
