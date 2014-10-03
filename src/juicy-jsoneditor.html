@@ -1,6 +1,6 @@
 <!-- Import Polymer -->
 <!-- <link rel="import" href="../../polymer/polymer.html"> -->
-<script type="text/javascript" src="../../jsoneditor/jsoneditor.min.js"></script>
+<script type="text/javascript" src="../../jsoneditor/jsoneditor.js"></script>
 <script type="text/javascript" src="../../jsoneditor/asset/ace/ace.js"></script>
 
 <!-- Define your custom element -->
@@ -37,27 +37,28 @@
                     search: this.search,
                     indentation: this.indentation,
 
-                    change: function editorChanged(){
+                    change: function editorChanged(action, params){
                         if(that.editor){
                             // perform shallow clone, as josdejong/jsoneditor does not return changes
                             // and we would like to keep at least root json object not replaced.
                             // josdejong/jsoneditor#87
-                            var newJson = that.editor.get();
                             var oldJson = that.json;
-                            // add || update 
-                            for (var newProperty in newJson) {
-                                if (newJson.hasOwnProperty(newProperty) && newJson.propertyIsEnumerable(newProperty)) {
-                                    oldJson[newProperty] = newJson[newProperty];
-                                }
-                            }
-                            // remove
-                            for (var oldProperty in oldJson) {
-                                if( !newJson.hasOwnProperty(oldProperty) &&
-                                    oldJson.hasOwnProperty(oldProperty)  && 
-                                    oldJson.propertyIsEnumerable(oldProperty)
-                                ){
-                                    delete oldJson[oldProperty]; 
-                                }
+                            console.warn(params);
+                            switch(action){
+                                case "editValue":
+                                    changeValue(that.json, params.node.path(), params.newValue);
+                                    break;
+                                case "removeNode":
+                                    debugger
+                                    removeNode(that.json,  params.node.path())
+                                    break;
+                                case "appendNode":
+                                    changeValue(that.json, params.node.path().concat([""]), "");
+                                    break;
+                                case "editField":
+                                    editField(that.json, params.node.path(), params.oldValue, params.newValue);
+                                    // JSON-Patch replace?
+                                    break;
                             }
                         }
                     }
@@ -97,6 +98,36 @@
                 this.editor && this.editor.setName(this.name);
             }
         });
+
+        function changeValue( obj, path, val ){
+            var node = obj;
+            var level = 0, 
+                depth = path.length
+            for(; level < depth - 1; level++){
+                node = node[path[level]];
+            }
+            node[path[level]] = val;
+        }
+        function removeNode( obj, path ){
+            var node = obj;
+            var level = 0, 
+                depth = path.length
+            for(; level < depth - 1; level++){
+                node = node[path[level]];
+            }
+            delete node[path[level]];
+        }
+        function editField( obj, path, oldVal, newVal ){
+            debugger
+            var node = obj;
+            var level = 0, 
+                depth = path.length
+            for(; level < depth - 1; level++){
+                node = node[path[level]];
+            }
+            node[newVal] = node[oldVal]
+            delete node[oldVal];
+        }
     }());
     </script>
 
