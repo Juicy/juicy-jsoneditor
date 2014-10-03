@@ -49,6 +49,7 @@ Attribute      | Options            | Default  | Description
 `name`         | *String*           |          | Object name, see [API](https://github.com/josdejong/jsoneditor/blob/master/docs/api.md#constructor)
 `search`       | *Boolean*          | `true`   | Toggle search box, see [API](https://github.com/josdejong/jsoneditor/blob/master/docs/api.md#constructor)
 `indentation`  | *Number*           | `2`      | Indentation, see [API](https://github.com/josdejong/jsoneditor/blob/master/docs/api.md#constructor)
+`history`      | *Boolean*          | `true`   | Toggle history - undo, redo, see [API](https://github.com/josdejong/jsoneditor/blob/master/docs/api.md#constructor)
 
 ## Properties
 All attributes, plus:

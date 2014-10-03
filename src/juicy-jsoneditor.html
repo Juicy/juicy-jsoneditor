@@ -4,7 +4,7 @@
 <script type="text/javascript" src="../../jsoneditor/asset/ace/ace.js"></script>
 
 <!-- Define your custom element -->
-<polymer-element name="juicy-jsoneditor" attributes="json mode modes name search indentation">
+<polymer-element name="juicy-jsoneditor" attributes="json mode modes name search indentation history">
     <template>
         <link rel="stylesheet" type="text/css" href="../../jsoneditor/jsoneditor.min.css">
         <style>
@@ -26,6 +26,7 @@
             editor: null,
             modes:[],
             search: true,
+            history: false,
             attached: function() {
                 var that = this;
                 var options = {
