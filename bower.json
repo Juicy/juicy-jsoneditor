@@ -16,8 +16,8 @@
     "preview.png"
   ],
   "dependencies": {
-    "polymer": "Polymer/polymer#~0.3.4",
-    "jsoneditor": "~3.0.0"
+    "polymer": "Polymer/polymer#~0.4.1",
+    "jsoneditor": "tomalec/jsoneditor#102-onChangeArguments"
   },
   "authors": [
     "Tomek Wytrebowicz <tomalecpub@gmail.com>"
