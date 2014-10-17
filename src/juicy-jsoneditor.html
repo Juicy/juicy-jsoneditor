@@ -42,9 +42,16 @@
 
                     change: function editorChanged(action, params){
                         if(that.editor){
-                            // perform shallow clone, as josdejong/jsoneditor does not return changes
                             // and we would like to keep at least root json object not replaced.
                             // josdejong/jsoneditor#87
+                            that.dispatchEvent(
+                                new CustomEvent("change", {
+                                    detail: {
+                                        action: action,
+                                        params: params
+                                    }
+                                })
+                            );
                             var oldJson = that.json;
                             console.warn(params);
                             switch(action){

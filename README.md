@@ -70,6 +70,11 @@ Name          | Type            |  Description
 
 delegated to [`JSONEditor`'s methods](https://github.com/josdejong/jsoneditor/blob/master/docs/api.md#methods)
 
+## Events
+
+Event    | event.details                                  | Description
+---      | ---                                            | ---
+`change` | `{action: "JSONEditor-action", params: {..} }` | Triggers when json changes.
 
 ## Contributing
 
