@@ -22,11 +22,14 @@
         var JSONEditorAPI = 
             ["set","setMode","setName","setText","get","getName","getText"];
         Polymer('juicy-jsoneditor', {
-            json: {},
+            json: null,
             editor: null,
             modes:[],
             search: true,
             history: false,
+            created: function(){
+                this.json = this.json || {};
+            },
             attached: function() {
                 var that = this;
                 var options = {
