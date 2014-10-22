@@ -2,6 +2,8 @@
 <!-- <link rel="import" href="../../polymer/polymer.html"> -->
 <script type="text/javascript" src="../../jsoneditor/jsoneditor.js"></script>
 <script type="text/javascript" src="../../jsoneditor/asset/ace/ace.js"></script>
+<!-- <script src="../../fast-json-patch/src/json-patch-duplex.js"></script> -->
+<script src="../../fast-json-patch/src/json-patch.js"></script>
 
 <!-- Define your custom element -->
 <polymer-element name="juicy-jsoneditor" attributes="json mode modes name search indentation history">
@@ -27,8 +29,10 @@
             modes:[],
             search: true,
             history: false,
+            // observer: null,
             created: function(){
                 this.json = this.json || {};
+                // this.observer = jsonpatch.observe( this.json, somethingChanged.bind(this) )
             },
             attached: function() {
                 var that = this;
@@ -40,36 +44,19 @@
                     search: this.search,
                     indentation: this.indentation,
 
-                    change: function editorChanged(action, params){
+                    change: function editorChanged(patch){
                         if(that.editor){
                             // and we would like to keep at least root json object not replaced.
                             // josdejong/jsoneditor#87
                             that.dispatchEvent(
                                 new CustomEvent("change", {
                                     detail: {
-                                        action: action,
-                                        params: params
+                                        action: patch,
+                                        patch: patch
                                     }
                                 })
                             );
-                            var oldJson = that.json;
-                            console.warn(params);
-                            switch(action){
-                                case "editValue":
-                                    changeValue(that.json, params.node.path(), params.newValue);
-                                    break;
-                                case "removeNode":
-                                    debugger
-                                    removeNode(that.json,  params.node.path())
-                                    break;
-                                case "appendNode":
-                                    changeValue(that.json, params.node.path().concat([""]), "");
-                                    break;
-                                case "editField":
-                                    editField(that.json, params.node.path(), params.oldValue, params.newValue);
-                                    // JSON-Patch replace?
-                                    break;
-                            }
+                            jsonpatch.apply(that.json, [patch]);
                         }
                     }
                 };
@@ -77,22 +64,7 @@
                 this.editor = new JSONEditor(this.$.jsoneditorContainer, options);
                 this.editor.set(this.json);
 
-                function somethingChanged(){
-                    // Performance killer!, but without 
-                    // josdejong/jsoneditor#39 (josdejong/jsoneditor#79)
-                    // josdejong/jsoneditor#87
-                    // we cannot do much better
-                    if(JSON.stringify(that.json) != that.editor.getText() ){
-                        that.editor.set(that.json);
-                    }
-                }
-
-                if( typeof Object.observe !== 'function' ){
-                    var polyfillObserver = new ObjectObserver( that.json );
-                    polyfillObserver.open( somethingChanged );
-                } else {
-                    Object.observe( this.json, somethingChanged );                     
-                } 
+                //? observe json
 
                 // Delegate JSONEditor API
                 var apiNo = JSONEditorAPI.length;
@@ -101,43 +73,26 @@
                 }
 
             },
+            detached: function(){
+                // jsonpatch.unobserve( this.json, this.observer );
+            },
             modeChanged: function modeChanged(){
                 this.editor && this.editor.setMode(this.mode);
             },
             nameChanged: function nameChanged(){
                 this.editor && this.editor.setName(this.name);
+            },
+            jsonChanged: function jsonChanged(){
+                return this.refresh();
+                // jsonpatch.unobserve( this.json, this.observer );
+                // this.observer = jsonpatch.observe( this.json, somethingChanged.bind(this) )
+            },
+            refresh: function refresh(){
+                return this.editor.set(this.json);
             }
         });
 
-        function changeValue( obj, path, val ){
-            var node = obj;
-            var level = 0, 
-                depth = path.length
-            for(; level < depth - 1; level++){
-                node = node[path[level]];
-            }
-            node[path[level]] = val;
-        }
-        function removeNode( obj, path ){
-            var node = obj;
-            var level = 0, 
-                depth = path.length
-            for(; level < depth - 1; level++){
-                node = node[path[level]];
-            }
-            delete node[path[level]];
-        }
-        function editField( obj, path, oldVal, newVal ){
-            debugger
-            var node = obj;
-            var level = 0, 
-                depth = path.length
-            for(; level < depth - 1; level++){
-                node = node[path[level]];
-            }
-            node[newVal] = node[oldVal]
-            delete node[oldVal];
-        }
+
     }());
     </script>
 
