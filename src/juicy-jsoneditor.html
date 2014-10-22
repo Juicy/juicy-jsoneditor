@@ -2,9 +2,10 @@
 <!-- <link rel="import" href="../../polymer/polymer.html"> -->
 <script type="text/javascript" src="../../jsoneditor/jsoneditor.js"></script>
 <script type="text/javascript" src="../../jsoneditor/asset/ace/ace.js"></script>
-<!-- <script src="../../fast-json-patch/src/json-patch-duplex.js"></script> -->
-<script src="../../fast-json-patch/src/json-patch.js"></script>
+<script src="../../fast-json-patch/src/json-patch-duplex.js"></script>
+<!-- <script src="../../fast-json-patch/src/json-patch.js"></script> -->
 
+<!-- IDEA: Add observe attribute to toggle observing external json changes -->
 <!-- Define your custom element -->
 <polymer-element name="juicy-jsoneditor" attributes="json mode modes name search indentation history">
     <template>
@@ -24,57 +25,69 @@
         var JSONEditorAPI = 
             ["set","setMode","setName","setText","get","getName","getText"];
         Polymer('juicy-jsoneditor', {
-            json: null,
+            json: {},
             editor: null,
             modes:[],
             search: true,
             history: false,
+
+            observer: null,
             // observer: null,
             created: function(){
-                this.json = this.json || {};
-                // this.observer = jsonpatch.observe( this.json, somethingChanged.bind(this) )
+                //prevent sharing the same Object by different instances
+                if(!this.getAttribute("json")){
+                    this.json = {};
+                }
+                //force context for observers
+                this.refresh = this.refresh.bind(this);
             },
             attached: function() {
-                var that = this;
-                var options = {
-                    mode: this.mode,
-                    history: this.history,
-                    name: this.name,
-                    modes: this.modes,
-                    search: this.search,
-                    indentation: this.indentation,
+                if( this.editor ){ // refresh editor when re-attached
+                    this.editor.set(this.json);   
+                    this.observer = jsonpatch.observe( this.json, this.refresh );              
+                } else {
+                    var that = this;
+                    var options = {
+                        mode: this.mode,
+                        history: this.history,
+                        name: this.name,
+                        modes: this.modes,
+                        search: this.search,
+                        indentation: this.indentation,
 
-                    change: function editorChanged(patch){
-                        if(that.editor){
-                            // and we would like to keep at least root json object not replaced.
-                            // josdejong/jsoneditor#87
-                            that.dispatchEvent(
-                                new CustomEvent("change", {
-                                    detail: {
-                                        action: patch,
-                                        patch: patch
-                                    }
-                                })
-                            );
-                            jsonpatch.apply(that.json, [patch]);
+                        change: function editorChanged(patch){
+                            if(that.editor){
+                                // and we would like to keep at least root json object not replaced.
+                                // josdejong/jsoneditor#87
+                                that.dispatchEvent(
+                                    new CustomEvent("change", {
+                                        detail: {
+                                            action: patch,
+                                            patch: patch
+                                        }
+                                    })
+                                );
+                                that.observer && jsonpatch.unobserve( that.json, that.observer );
+                                jsonpatch.apply(that.json, [patch]);
+                                //that.observer(that.json);
+                                that.observer = jsonpatch.observe( that.json, that.refresh );
+                            }
                         }
+                    };
+
+                    this.editor = new JSONEditor(this.$.jsoneditorContainer, options);
+                    this.editor.set(this.json);
+
+                    // Delegate JSONEditor API
+                    var apiNo = JSONEditorAPI.length;
+                    while(apiNo--){
+                        this[ JSONEditorAPI[apiNo] ] = this.editor[ JSONEditorAPI[apiNo] ].bind( this.editor );
                     }
-                };
-
-                this.editor = new JSONEditor(this.$.jsoneditorContainer, options);
-                this.editor.set(this.json);
-
-                //? observe json
-
-                // Delegate JSONEditor API
-                var apiNo = JSONEditorAPI.length;
-                while(apiNo--){
-                    this[ JSONEditorAPI[apiNo] ] = this.editor[ JSONEditorAPI[apiNo] ].bind( this.editor );
                 }
 
             },
             detached: function(){
-                // jsonpatch.unobserve( this.json, this.observer );
+                jsonpatch.unobserve( this.json, this.observer );
             },
             modeChanged: function modeChanged(){
                 this.editor && this.editor.setMode(this.mode);
@@ -82,10 +95,12 @@
             nameChanged: function nameChanged(){
                 this.editor && this.editor.setName(this.name);
             },
-            jsonChanged: function jsonChanged(){
+            jsonChanged: function jsonChanged(oldJson, newJson){
+                // return this.refresh();
+                this.observer && jsonpatch.unobserve( oldJson, this.observer );
+                //this.observer(newJson);
+                this.observer = jsonpatch.observe( newJson, this.refresh )
                 return this.refresh();
-                // jsonpatch.unobserve( this.json, this.observer );
-                // this.observer = jsonpatch.observe( this.json, somethingChanged.bind(this) )
             },
             refresh: function refresh(){
                 return this.editor.set(this.json);
