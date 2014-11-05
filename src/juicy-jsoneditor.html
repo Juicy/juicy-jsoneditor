@@ -86,7 +86,8 @@
                 }
 
             },
-            detached: function(){
+            detached: function(){// unobserve when detached, 
+                //so we will not have to perform any editor actions, it will get back to sync when re-attached
                 jsonpatch.unobserve( this.json, this.observer );
             },
             modeChanged: function modeChanged(){
