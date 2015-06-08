@@ -1,7 +1,6 @@
 <!-- Import Polymer -->
 <!-- <link rel="import" href="../../polymer/polymer.html"> -->
-<script type="text/javascript" src="../../jsoneditor/jsoneditor.js"></script>
-<script type="text/javascript" src="../../jsoneditor/asset/ace/ace.js"></script>
+<script type="text/javascript" src="../../jsoneditor/dist/jsoneditor.min.js"></script>
 <script src="../../fast-json-patch/src/json-patch-duplex.js"></script>
 <!-- <script src="../../fast-json-patch/src/json-patch.js"></script> -->
 
@@ -9,7 +8,7 @@
 <!-- Define your custom element -->
 <polymer-element name="juicy-jsoneditor" attributes="json mode modes name search indentation history">
     <template>
-        <link rel="stylesheet" type="text/css" href="../../jsoneditor/jsoneditor.min.css">
+        <link rel="stylesheet" type="text/css" href="../../jsoneditor/dist/jsoneditor.min.css">
         <style>
             :host{
                 display: block;
@@ -55,23 +54,25 @@
                         search: this.search,
                         indentation: this.indentation,
 
-                        change: function editorChanged(patch){
-                            if(that.editor){
-                                // and we would like to keep at least root json object not replaced.
-                                // josdejong/jsoneditor#87
-                                that.dispatchEvent(
-                                    new CustomEvent("change", {
-                                        detail: {
-                                            action: patch,
-                                            patch: patch
-                                        }
-                                    })
-                                );
-                                that.observer && jsonpatch.unobserve( that.json, that.observer );
-                                jsonpatch.apply(that.json, [patch]);
-                                //that.observer(that.json);
-                                that.observer = jsonpatch.observe( that.json, that.refresh );
+                        change: function editorChanged() {
+                            if (!that.editor) {
+                                return;
                             }
+
+                            var patches = jsonpatch.compare(that.json, that.editor.get());
+
+                            that.dispatchEvent(
+                                new CustomEvent("change", {
+                                    detail: {
+                                        action: patches,
+                                        patches: patches
+                                    }
+                                })
+                            );
+
+                            that.observer && jsonpatch.unobserve(that.json, that.observer);
+                            jsonpatch.apply(that.json, patches);
+                            that.observer = jsonpatch.observe(that.json, that.refresh);
                         }
                     };
 
