@@ -104,8 +104,49 @@
                 this.observer = jsonpatch.observe( newJson, this.refresh )
                 return this.refresh();
             },
-            refresh: function refresh(){
-                return this.editor.set(this.json);
+            refresh: function refresh() {
+                var state = this.getExpandState();
+                var r = this.editor.set(this.json);
+
+                this.setExpandState(state);
+
+                return r;
+            },
+            getExpandState: function (node) {
+                if (!node) {
+                    node = this.editor.node;
+                }
+
+                var r = {
+                    expanded: node.expanded
+                };
+
+                if (node.childs) {
+                    r.childs = [];
+
+                    for (var i = 0; i < node.childs.length; i++) {
+                        r.childs.push(this.getExpandState(node.childs[i]));
+                    }
+                }
+
+                return r;
+            },
+            setExpandState: function (state, node) {
+                if (!node) {
+                    node = this.editor.node;
+                }
+
+                if (state.expanded) {
+                    node.expand(false);
+                }
+
+                if (state.childs) {
+                    for (var i = 0; i < state.childs.length; i++) {
+                        if (node.childs[i]) {
+                            this.setExpandState(state.childs[i], node.childs[i]);
+                        }
+                    }
+                }
             }
         });
 
