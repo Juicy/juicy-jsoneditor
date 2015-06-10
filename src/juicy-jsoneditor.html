@@ -5,7 +5,7 @@
 version: 0.0.6
 -->
 <!-- Import Polymer -->
-<!-- <link rel="import" href="../../polymer/polymer.html"> -->
+<link rel="import" href="../../polymer/polymer.html">
 <script type="text/javascript" src="../../jsoneditor/dist/jsoneditor.min.js"></script>
 <script src="../../fast-json-patch/src/json-patch-duplex.js"></script>
 <!-- <script src="../../fast-json-patch/src/json-patch.js"></script> -->
@@ -30,7 +30,7 @@ version: 0.0.6
         var JSONEditorAPI = 
             ["set","setMode","setName","setText","get","getName","getText"];
         Polymer('juicy-jsoneditor', {
-            json: {},
+            json: null,
             editor: null,
             modes:[],
             search: true,
@@ -40,9 +40,7 @@ version: 0.0.6
             // observer: null,
             created: function(){
                 //prevent sharing the same Object by different instances
-                if(!this.getAttribute("json")){
-                    this.json = {};
-                }
+                this.json = {};
                 //force context for observers
                 this.refresh = this.refresh.bind(this);
             },
