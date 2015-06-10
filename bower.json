@@ -15,9 +15,9 @@
     "preview.png"
   ],
   "dependencies": {
-    "polymer": "Polymer/polymer#^0.4.1",
+    "polymer": "Polymer/polymer#^0.5.6",
     "jsoneditor": "josdejong/jsoneditor#master",
-    "fast-json-patch": "~0.4.0"
+    "fast-json-patch": "~0.5.2"
   },
   "authors": [
     "Tomek Wytrebowicz <tomalecpub@gmail.com>"
