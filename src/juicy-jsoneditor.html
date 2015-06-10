@@ -116,7 +116,9 @@ version: 0.0.6
                 return r;
             },
             getExpandState: function (node) {
-                if (!node) {
+                if (!node && !this.editor.node) {
+                    return {};
+                } else if (!node) {
                     node = this.editor.node;
                 }
 
@@ -135,7 +137,9 @@ version: 0.0.6
                 return r;
             },
             setExpandState: function (state, node) {
-                if (!node) {
+                if (!node && !this.editor.node) {
+                    return;
+                } else if (!node) {
                     node = this.editor.node;
                 }
 
