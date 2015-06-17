@@ -16,7 +16,7 @@
   ],
   "dependencies": {
     "polymer": "Polymer/polymer#^0.5.6",
-    "jsoneditor": "josdejong/jsoneditor#master",
+    "jsoneditor": "josdejong/jsoneditor#^4.2.1",
     "fast-json-patch": "~0.5.2"
   },
   "authors": [
