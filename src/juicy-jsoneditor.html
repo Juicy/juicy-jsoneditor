@@ -115,22 +115,27 @@ version: 0.0.6
 
                 return r;
             },
-            getExpandState: function (node) {
+            getExpandState: function (node, focused) {
                 if (!node && !this.editor.node) {
                     return {};
                 } else if (!node) {
                     node = this.editor.node;
                 }
 
+                if (!focused) {
+                    focused = document.querySelector("html /deep/ :focus");
+                }
+
                 var r = {
-                    expanded: node.expanded
+                    expanded: node.expanded,
+                    focused: node.dom.value && node.dom.value == focused
                 };
 
                 if (node.childs) {
                     r.childs = [];
 
                     for (var i = 0; i < node.childs.length; i++) {
-                        r.childs.push(this.getExpandState(node.childs[i]));
+                        r.childs.push(this.getExpandState(node.childs[i], focused));
                     }
                 }
 
@@ -145,6 +150,19 @@ version: 0.0.6
 
                 if (state.expanded) {
                     node.expand(false);
+                }
+
+                if (state.focused && node.dom.value) {
+                    node.dom.value.focus();
+
+                    var range = document.createRange();
+                    var selection = window.getSelection();
+
+                    range.selectNodeContents(document.querySelector("html /deep/ :focus"));
+                    range.collapse(false);
+
+                    selection.removeAllRanges();
+                    selection.addRange(range);
                 }
 
                 if (state.childs) {
