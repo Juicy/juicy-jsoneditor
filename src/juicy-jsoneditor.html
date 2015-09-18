@@ -4,178 +4,189 @@
 @element juicy-jsoneditor
 version: 0.0.7
 -->
-<!-- Import Polymer -->
-<link rel="import" href="../../polymer/polymer.html">
-<script type="text/javascript" src="../../jsoneditor/dist/jsoneditor.min.js"></script>
-<script src="../../fast-json-patch/src/json-patch-duplex.js"></script>
-<!-- <script src="../../fast-json-patch/src/json-patch.js"></script> -->
 
-<!-- IDEA: Add observe attribute to toggle observing external json changes -->
+<link rel="import" href="../../polymer/polymer.html">
+<script src="../../jsoneditor/dist/jsoneditor.min.js"></script>
+<script src="../../fast-json-patch/src/json-patch-duplex.js"></script>
 <!-- Define your custom element -->
-<polymer-element name="juicy-jsoneditor" attributes="json mode modes name search indentation history">
+<dom-module id="juicy-jsoneditor">
+    <!-- special import with type=css used to load remote CSS -->
+    <!-- deprecated https://www.polymer-project.org/1.0/docs/devguide/styling.html#external-stylesheets -->
+    <link rel="import" type="css" href="../../jsoneditor/dist/jsoneditor.min.css">
+
     <template>
-        <link rel="stylesheet" type="text/css" href="../../jsoneditor/dist/jsoneditor.min.css">
         <style>
-            :host{
+            :host {
                 display: block;
             }
-            #jsoneditorContainer{
+
+            #jsoneditorContainer {
                 height: 100%;
             }
         </style>
         <div id="jsoneditorContainer"></div>
     </template>
     <script>
-    (function(){
-        var JSONEditorAPI = 
-            ["set","setMode","setName","setText","get","getName","getText"];
-        Polymer('juicy-jsoneditor', {
-            json: null,
-            editor: null,
-            modes:[],
-            search: true,
-            history: false,
+        (function () {
+            var JSONEditorAPI = ["set", "setMode", "setName", "setText", "get", "getName", "getText"];
 
-            observer: null,
-            // observer: null,
-            created: function(){
-                //prevent sharing the same Object by different instances
-                this.json = {};
-                //force context for observers
-                this.refresh = this.refresh.bind(this);
-            },
-            attached: function() {
-                if( this.editor ){ // refresh editor when re-attached
-                    this.editor.set(this.json);   
-                    this.observer = jsonpatch.observe( this.json, this.refresh );              
-                } else {
-                    var that = this;
-                    var options = {
-                        mode: this.mode,
-                        history: this.history,
-                        name: this.name,
-                        modes: this.modes,
-                        search: this.search,
-                        indentation: this.indentation,
+            Polymer({
+                is: 'juicy-jsoneditor',
+                properties: {
+                    json: { type: Object, value: null, observer: "jsonChanged" },
+                    mode: { type: String, observer: "modeChanged" },
+                    modes: { type: Array, value: [] },
+                    name: { type: String, observer: "nameChanged" },
+                    search: { type: Boolean, value: true },
+                    indentation: { type: String },
+                    history: { type: Boolean, value: false }
+                },
+                editor: null,
+                observer: null,
+                created: function () {
+                    //prevent sharing the same Object by different instances
+                    //this.json = {};
+                    //force context for observers
+                    this.refresh = this.refresh.bind(this);
+                },
+                attached: function () {
+                    if (this.editor) { // refresh editor when re-attached
+                        this.editor.set(this.json);
+                        this.observer = jsonpatch.observe(this.json, this.refresh);
+                    } else {
+                        var that = this;
+                        var options = {
+                            mode: this.mode,
+                            history: this.history,
+                            name: this.name,
+                            modes: this.modes,
+                            search: this.search,
+                            indentation: this.indentation,
 
-                        change: function editorChanged() {
-                            if (!that.editor) {
-                                return;
+                            change: function editorChanged() {
+                                if (!that.editor) {
+                                    return;
+                                }
+
+                                var patches = jsonpatch.compare(that.json, that.editor.get());
+
+                                that.dispatchEvent(
+                                    new CustomEvent("change", {
+                                        detail: {
+                                            patches: patches
+                                        }
+                                    })
+                                );
+
+                                that.observer && jsonpatch.unobserve(that.json, that.observer);
+                                jsonpatch.apply(that.json, patches);
+                                that.observer = jsonpatch.observe(that.json, that.refresh);
                             }
+                        };
 
-                            var patches = jsonpatch.compare(that.json, that.editor.get());
+                        this.editor = new JSONEditor(this.$.jsoneditorContainer, options);
+                        this.editor.set(this.json);
 
-                            that.dispatchEvent(
-                                new CustomEvent("change", {
-                                    detail: {
-                                        patches: patches
-                                    }
-                                })
-                            );
-
-                            that.observer && jsonpatch.unobserve(that.json, that.observer);
-                            jsonpatch.apply(that.json, patches);
-                            that.observer = jsonpatch.observe(that.json, that.refresh);
+                        // Delegate JSONEditor API
+                        var apiNo = JSONEditorAPI.length;
+                        while (apiNo--) {
+                            this[JSONEditorAPI[apiNo]] = this.editor[JSONEditorAPI[apiNo]].bind(this.editor);
                         }
+                    }
+
+                },
+                detached: function () {// unobserve when detached,
+                    //so we will not have to perform any editor actions, it will get back to sync when re-attached
+                    jsonpatch.unobserve(this.json, this.observer);
+                },
+                modeChanged: function modeChanged() {
+                    this.editor && this.editor.setMode(this.mode);
+                },
+                nameChanged: function nameChanged() {
+                    this.editor && this.editor.setName(this.name);
+                },
+                jsonChanged: function jsonChanged(newJson, oldJson) {
+                    // return this.refresh();
+                    this.observer && jsonpatch.unobserve(oldJson, this.observer);
+                    //this.observer(newJson);
+                    this.observer = jsonpatch.observe(newJson, this.refresh)
+                    return this.refresh();
+                },
+                refresh: function refresh() {
+                    if (!this.editor) {
+                        return;
+                    }
+
+                    var state = this.getExpandState();
+                    var r = this.editor.set(this.json);
+
+                    this.setExpandState(state);
+
+                    return r;
+                },
+                getExpandState: function (node, focused) {
+                    if (!this.editor) {
+                        return {};
+                    }
+
+                    if (!node && !this.editor.node) {
+                        return {};
+                    } else if (!node) {
+                        node = this.editor.node;
+                    }
+
+                    if (!focused) {
+                        focused = document.querySelector("html /deep/ :focus");
+                    }
+
+                    var r = {
+                        expanded: node.expanded,
+                        focused: node.dom.value && node.dom.value == focused
                     };
 
-                    this.editor = new JSONEditor(this.$.jsoneditorContainer, options);
-                    this.editor.set(this.json);
+                    if (node.childs) {
+                        r.childs = [];
 
-                    // Delegate JSONEditor API
-                    var apiNo = JSONEditorAPI.length;
-                    while(apiNo--){
-                        this[ JSONEditorAPI[apiNo] ] = this.editor[ JSONEditorAPI[apiNo] ].bind( this.editor );
+                        for (var i = 0; i < node.childs.length; i++) {
+                            r.childs.push(this.getExpandState(node.childs[i], focused));
+                        }
                     }
-                }
 
-            },
-            detached: function(){// unobserve when detached, 
-                //so we will not have to perform any editor actions, it will get back to sync when re-attached
-                jsonpatch.unobserve( this.json, this.observer );
-            },
-            modeChanged: function modeChanged(){
-                this.editor && this.editor.setMode(this.mode);
-            },
-            nameChanged: function nameChanged(){
-                this.editor && this.editor.setName(this.name);
-            },
-            jsonChanged: function jsonChanged(oldJson, newJson){
-                // return this.refresh();
-                this.observer && jsonpatch.unobserve( oldJson, this.observer );
-                //this.observer(newJson);
-                this.observer = jsonpatch.observe( newJson, this.refresh )
-                return this.refresh();
-            },
-            refresh: function refresh() {
-                var state = this.getExpandState();
-                var r = this.editor.set(this.json);
-
-                this.setExpandState(state);
-
-                return r;
-            },
-            getExpandState: function (node, focused) {
-                if (!node && !this.editor.node) {
-                    return {};
-                } else if (!node) {
-                    node = this.editor.node;
-                }
-
-                if (!focused) {
-                    focused = document.querySelector("html /deep/ :focus");
-                }
-
-                var r = {
-                    expanded: node.expanded,
-                    focused: node.dom.value && node.dom.value == focused
-                };
-
-                if (node.childs) {
-                    r.childs = [];
-
-                    for (var i = 0; i < node.childs.length; i++) {
-                        r.childs.push(this.getExpandState(node.childs[i], focused));
+                    return r;
+                },
+                setExpandState: function (state, node) {
+                    if (!node && !this.editor.node) {
+                        return;
+                    } else if (!node) {
+                        node = this.editor.node;
                     }
-                }
 
-                return r;
-            },
-            setExpandState: function (state, node) {
-                if (!node && !this.editor.node) {
-                    return;
-                } else if (!node) {
-                    node = this.editor.node;
-                }
+                    if (state.expanded) {
+                        node.expand(false);
+                    }
 
-                if (state.expanded) {
-                    node.expand(false);
-                }
+                    if (state.focused && node.dom.value) {
+                        node.dom.value.focus();
 
-                if (state.focused && node.dom.value) {
-                    node.dom.value.focus();
+                        var range = document.createRange();
+                        var selection = window.getSelection();
 
-                    var range = document.createRange();
-                    var selection = window.getSelection();
+                        range.selectNodeContents(document.querySelector("html /deep/ :focus"));
+                        range.collapse(false);
 
-                    range.selectNodeContents(document.querySelector("html /deep/ :focus"));
-                    range.collapse(false);
+                        selection.removeAllRanges();
+                        selection.addRange(range);
+                    }
 
-                    selection.removeAllRanges();
-                    selection.addRange(range);
-                }
-
-                if (state.childs) {
-                    for (var i = 0; i < state.childs.length; i++) {
-                        if (node.childs[i]) {
-                            this.setExpandState(state.childs[i], node.childs[i]);
+                    if (state.childs) {
+                        for (var i = 0; i < state.childs.length; i++) {
+                            if (node.childs[i]) {
+                                this.setExpandState(state.childs[i], node.childs[i]);
+                            }
                         }
                     }
                 }
-            }
-        });
-
-
-    }());
+            });
+        }());
     </script>
-</polymer-element>
+</dom-module>
