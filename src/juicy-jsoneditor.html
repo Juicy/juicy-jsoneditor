@@ -108,8 +108,12 @@ version: 0.0.7
                 jsonChanged: function jsonChanged(newJson, oldJson) {
                     // return this.refresh();
                     this.observer && jsonpatch.unobserve(oldJson, this.observer);
+
                     //this.observer(newJson);
-                    this.observer = jsonpatch.observe(newJson, this.refresh)
+                    if (newJson) {
+                        this.observer = jsonpatch.observe(newJson, this.refresh)
+                    }
+
                     return this.refresh();
                 },
                 refresh: function refresh() {
@@ -180,7 +184,7 @@ version: 0.0.7
 
                     if (state.childs) {
                         for (var i = 0; i < state.childs.length; i++) {
-                            if (node.childs[i]) {
+                            if (node.childs && node.childs[i]) {
                                 this.setExpandState(state.childs[i], node.childs[i]);
                             }
                         }
