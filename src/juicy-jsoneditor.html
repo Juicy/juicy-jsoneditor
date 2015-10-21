@@ -14,10 +14,12 @@ version: 1.0.3
         //Add jsoneditor styles only if Shadow DOM is not enabled
         if (!window.Polymer || window.Polymer.dom != "shadow") {
             var link = document.createElement("link");
+            var script = document._currentScript || document.currentScript;
+            var url = Polymer.ResolveUrl.resolveUrl("../../jsoneditor/dist/jsoneditor.min.css", script.baseURI);
 
             link.rel = "stylesheet";
             link.type = "text/css";
-            link.href = "../../jsoneditor/dist/jsoneditor.min.css";
+            link.href = url;
 
             document.querySelector("head").appendChild(link);
         }
