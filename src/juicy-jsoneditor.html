@@ -8,6 +8,22 @@ version: 1.0.2
 <link rel="import" href="../../polymer/polymer.html">
 <script src="../../jsoneditor/dist/jsoneditor.min.js"></script>
 <script src="../../fast-json-patch/src/json-patch-duplex.js"></script>
+
+<script>
+    (function () {
+        //Add jsoneditor styles only if Shadow DOM is not enabled
+        if (!window.Polymer || window.Polymer.dom != "shadow") {
+            var link = document.createElement("link");
+
+            link.rel = "stylesheet";
+            link.type = "text/css";
+            link.href = "../../jsoneditor/dist/jsoneditor.min.css";
+
+            document.querySelector("head").appendChild(link);
+        }
+    })();
+</script>
+
 <!-- Define your custom element -->
 <dom-module id="juicy-jsoneditor">
     <!-- special import with type=css used to load remote CSS -->
