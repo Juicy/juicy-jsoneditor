@@ -9,29 +9,8 @@ version: 1.0.4
 <script src="../../jsoneditor/dist/jsoneditor.min.js"></script>
 <script src="../../fast-json-patch/src/json-patch-duplex.js"></script>
 
-<script>
-    (function () {
-        //Add jsoneditor styles only if Shadow DOM is not enabled
-        if (!window.Polymer || window.Polymer.dom != "shadow") {
-            var link = document.createElement("link");
-            var script = document._currentScript || document.currentScript;
-            var url = Polymer.ResolveUrl.resolveUrl("../../jsoneditor/dist/jsoneditor.min.css", script.baseURI);
-
-            link.rel = "stylesheet";
-            link.type = "text/css";
-            link.href = url;
-
-            document.querySelector("head").appendChild(link);
-        }
-    })();
-</script>
-
 <!-- Define your custom element -->
 <dom-module id="juicy-jsoneditor">
-    <!-- special import with type=css used to load remote CSS -->
-    <!-- deprecated https://www.polymer-project.org/1.0/docs/devguide/styling.html#external-stylesheets -->
-    <link rel="import" type="css" href="../../jsoneditor/dist/jsoneditor.min.css">
-
     <template>
         <style>
             :host {
@@ -47,6 +26,7 @@ version: 1.0.4
     <script>
         (function () {
             var JSONEditorAPI = ["set", "setMode", "setName", "setText", "get", "getName", "getText"];
+            var script = document._currentScript || document.currentScript;
 
             Polymer({
                 is: 'juicy-jsoneditor',
@@ -112,6 +92,14 @@ version: 1.0.4
                         }
                     }
 
+                    //Adding styles bypassing Polymer scoping
+                    var url = Polymer.ResolveUrl.resolveUrl("../../jsoneditor/dist/jsoneditor.min.css", script.ownerDocument.baseURI);
+                    var style = document.createElement("style");
+
+                    style.classList.add("juicy-jsoneditor-styles");
+                    style.innerHTML = ["@import url('", url, "');"].join("");
+
+                    Polymer.dom(this.root).appendChild(style);
                 },
                 detached: function () {// unobserve when detached,
                     //so we will not have to perform any editor actions, it will get back to sync when re-attached
