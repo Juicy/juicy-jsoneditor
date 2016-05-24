@@ -90,5 +90,5 @@ For detailed changelog, check [Releases](https://github.com/juicy/dummyCRM/relea
 
 ## License
 
- - `<juicy-jsoneditor>` [MIT License](http://opensource.org/licenses/MIT)
+ - `<juicy-jsoneditor>` MIT
  - `josdejong/JSONEditor` [Apache License](https://github.com/josdejong/jsoneditor/blob/master/LICENSE)
