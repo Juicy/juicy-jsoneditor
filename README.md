@@ -18,11 +18,10 @@ Or [download as ZIP](https://github.com/juicy/juicy-jsoneditor/archive/master.zi
 
 ## Usage
 
-1. Import Web Components' polyfill:
+1. Import Web Components' polyfill, if needed:
 
     ```html
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/polymer/0.3.4/platform.js"></script>
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/polymer/0.3.4/polymer.js"></script>
+    <script src="bower_components/webcomponentsjs/webcomponents.min.js"></script>
     ```
 
 2. Import Custom Element:
@@ -76,13 +75,7 @@ Event    | event.details                                  | Description
 ---      | ---                                            | ---
 `change` | `{action: "JSONEditor-action", params: {..} }` | Triggers when json changes.
 
-## Contributing
-
-1. Fork it!
-2. Create your feature branch: `git checkout -b my-new-feature`
-3. Commit your changes: `git commit -m 'Add some feature'`
-4. Push to the branch: `git push origin my-new-feature`
-5. Submit a pull request :D
+## [Contributing and Development](CONTRIBUTING.md)
 
 ## History
 
