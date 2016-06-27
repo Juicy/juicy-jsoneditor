@@ -5,9 +5,9 @@
 version: 1.0.5
 -->
 
-<link rel="import" href="../../polymer/polymer.html">
-<script src="../../jsoneditor/dist/jsoneditor.min.js"></script>
-<script src="../../fast-json-patch/src/json-patch-duplex.js"></script>
+<link rel="import" href="../polymer/polymer.html">
+<script src="../jsoneditor/dist/jsoneditor.min.js"></script>
+<script src="../fast-json-patch/src/json-patch-duplex.js"></script>
 
 <!-- Define your custom element -->
 <dom-module id="juicy-jsoneditor">
@@ -93,7 +93,7 @@ version: 1.0.5
                     }
 
                     //Adding styles bypassing Polymer scoping
-                    var url = Polymer.ResolveUrl.resolveUrl("../../jsoneditor/dist/jsoneditor.min.css", script.ownerDocument.baseURI);
+                    var url = Polymer.ResolveUrl.resolveUrl("../jsoneditor/dist/jsoneditor.min.css", script.ownerDocument.baseURI);
                     var style = document.createElement("style");
 
                     style.classList.add("juicy-jsoneditor-styles");

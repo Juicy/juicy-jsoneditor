@@ -17,18 +17,17 @@ module.exports = function(grunt) {
                 files: [
                     '*.html',
                     'examples/**/*.html',
-                    'tests/*.js',
-                    'src/*.html'
+                    'tests/*.js'
                 ],
                 // tasks: ['jshint'],
             },
         },
         bump: {
           options: {
-            files: ['src/*'],
+            files: ['juicy-jsoneditor.html', 'bower.json', 'package.json'],
             commit: true,
             commitMessage: '%VERSION%',
-            commitFiles: ['src/*'],
+            commitFiles: ['juicy-jsoneditor.html', 'bower.json', 'package.json'],
             createTag: true,
             tagName: '%VERSION%',
             tagMessage: 'Version %VERSION%',

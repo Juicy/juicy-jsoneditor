@@ -5,11 +5,11 @@
     <title>josdejong/jsoneditor#104</title>
     <link rel="stylesheet" href="http://juicy.github.io/juicy-tile-list/examples/github-markdown.css">
 
-    <!-- Importing Web Component's Polyfill -->    
+    <!-- Importing Web Component's Polyfill -->
     <script src="//cdn.jsdelivr.net/webcomponentsjs/0.6.0/webcomponents.min.js"></script>
 
     <!-- Importing Custom Elements -->
-    <link rel="import" href="../src/juicy-jsoneditor.html"> 
+    <link rel="import" href="../juicy-jsoneditor.html"> 
     <style>
     body {
 	    font-family: sans-serif;
@@ -69,7 +69,7 @@
             document.querySelector("template").model = appModel = {json: json};
             window.json = json;
             console.info("Play with me! I'm the `json` given to all those editors", json);
-            
+
         });
     </script>
     </article>

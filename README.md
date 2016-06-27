@@ -27,7 +27,7 @@ Or [download as ZIP](https://github.com/juicy/juicy-jsoneditor/archive/master.zi
 2. Import Custom Element:
 
     ```html
-    <link rel="import" href="bower_components/juicy-jsoneditor/src/juicy-jsoneditor.html">
+    <link rel="import" href="bower_components/juicy-jsoneditor/juicy-jsoneditor.html">
     <!-- josdejong/jsoneditor#104 workaround-->
     <link rel="stylesheet" type="text/css" href="bower_components/jsoneditor/jsoneditor.min.css">
     ```
