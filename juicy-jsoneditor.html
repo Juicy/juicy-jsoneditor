@@ -31,7 +31,7 @@ version: 1.0.5
             Polymer({
                 is: 'juicy-jsoneditor',
                 properties: {
-                    json: { type: Object, value: null, observer: "jsonChanged" },
+                    json: { type: Object, value: function() { return {}; }, observer: "jsonChanged" },
                     mode: { type: String, observer: "modeChanged" },
                     modes: { type: Array, value: [] },
                     name: { type: String, observer: "nameChanged" },
@@ -42,8 +42,6 @@ version: 1.0.5
                 editor: null,
                 observer: null,
                 created: function () {
-                    //prevent sharing the same Object by different instances
-                    //this.json = {};
                     //force context for observers
                     this.refresh = this.refresh.bind(this);
                 },
