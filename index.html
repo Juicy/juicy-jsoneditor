@@ -81,7 +81,7 @@
                 </p>
             </div>
             <div class="juicy-jsoneditor">
-                <juicy-jsoneditor json="{{model.json}}"></juicy-jsoneditor>
+                <juicy-jsoneditor json="{{model.json::jsonchange}}"></juicy-jsoneditor>
             </div>
             <div class="markdown-body">
                 <h2>Examples</h2>
@@ -91,66 +91,48 @@
                     <div class="markdown-body">
                         <h3>With <code>name</code> attribute</h3>
                         <div class="code">
-                            <code>&lt;juicy-jsoneditor json="{&zwj;{json}}" name="MyName"&gt;&lt;/juicy-jsoneditor&gt;</code>
+                            <code>&lt;juicy-jsoneditor json="{&zwj;{json::change}}" name="MyName"&gt;&lt;/juicy-jsoneditor&gt;</code>
                         </div>
                     </div>
-                    <juicy-jsoneditor json="{{model.json}}" name="MyName"></juicy-jsoneditor>
+                    <juicy-jsoneditor json="{{model.json::jsonchange}}" name="MyName"></juicy-jsoneditor>
                 </section>
                 <section>
                     <div class="markdown-body">
                         <h3>With <code>modes</code> attribute</h3>
                         <div class="code">
-                            <code>&lt;juicy-jsoneditor json="{&zwj;{json}}" modes="['code', 'form', 'text', 'tree', 'view']"&gt;&lt;/juicy-jsoneditor&gt;</code>
+                            <code>&lt;juicy-jsoneditor json="{&zwj;{json::change}}" modes="['code', 'form', 'text', 'tree', 'view']"&gt;&lt;/juicy-jsoneditor&gt;</code>
                         </div>
                     </div>
-                    <juicy-jsoneditor json="{{model.json}}" modes='["code", "form", "text", "tree", "view"]'></juicy-jsoneditor>
+                    <juicy-jsoneditor json="{{model.json::change}}" modes='["code", "form", "text", "tree", "view"]'></juicy-jsoneditor>
                 </section>
                 <section>
                     <div class="markdown-body">
-                        <h3>With <code>search</code> attribute</h3>
+                        <h3>With <code>search</code> attribute set to <code>false</code></h3>
                         <div class="code">
-                            <code>&lt;juicy-jsoneditor json="{&zwj;{json}}" search="false"&gt;&lt;/juicy-jsoneditor&gt;</code>
+                            <code>&lt;juicy-jsoneditor json="{&zwj;{json::change}}" search="false"&gt;&lt;/juicy-jsoneditor&gt;</code>
                         </div>
                     </div>
-                    <juicy-jsoneditor json="{{model.json}}" search="false"></juicy-jsoneditor>
+                    <juicy-jsoneditor json="{{model.json::change}}" search="false"></juicy-jsoneditor>
                 </section>
 
 
-                <section>
-                    <div class="markdown-body">
-                        <h3>With <code>search</code> attribute</h3>
-                        <div class="code">
-                            <code>&lt;juicy-jsoneditor json="{&zwj;{json}}" search="false"&gt;&lt;/juicy-jsoneditor&gt;</code>
-                        </div>
-                    </div>
-                    <juicy-jsoneditor json="{{model.json}}" search="false"></juicy-jsoneditor>
-                </section>
-                <section>
-                    <div class="markdown-body">
-                        <h3>With <code>search</code> attribute</h3>
-                        <div class="code">
-                            <code>&lt;juicy-jsoneditor json="{&zwj;{json}}" search="false"&gt;&lt;/juicy-jsoneditor&gt;</code>
-                        </div>
-                    </div>
-                    <juicy-jsoneditor json="{{model.json}}" search="false"></juicy-jsoneditor>
-                </section>
                 <section>
                     <div class="markdown-body">
                         <h3>With <code>mode</code> attribute</h3>
                         <div class="code">
-                            <code>&lt;juicy-jsoneditor json="{&zwj;{json}}" mode="text"&gt;&lt;/juicy-jsoneditor&gt;</code>
+                            <code>&lt;juicy-jsoneditor json="{&zwj;{json::change}}" mode="text"&gt;&lt;/juicy-jsoneditor&gt;</code>
                         </div>
                     </div>
-                    <juicy-jsoneditor json="{{model.json}}" mode="text"></juicy-jsoneditor>
+                    <juicy-jsoneditor json="{{model.json::change}}" mode="text"></juicy-jsoneditor>
                 </section>
                 <section>
                     <div class="markdown-body">
                         <h3>With <code>indentation</code> attribute</h3>
                         <div class="code">
-                            <code>&lt;juicy-jsoneditor json="{&zwj;{json}}" mode="text" indentation="4"&gt;&lt;/juicy-jsoneditor&gt;</code>
+                            <code>&lt;juicy-jsoneditor json="{&zwj;{json::change}}" mode="text" indentation="4"&gt;&lt;/juicy-jsoneditor&gt;</code>
                         </div>
                     </div>
-                    <juicy-jsoneditor json="{{model.json}}" mode="text" indentation="4"></juicy-jsoneditor>
+                    <juicy-jsoneditor json="{{model.json::change}}" mode="text" indentation="4"></juicy-jsoneditor>
                 </section>
             </section>
         </template>

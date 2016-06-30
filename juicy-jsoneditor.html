@@ -35,7 +35,7 @@ version: 1.0.5
                     mode: { type: String, observer: "modeChanged" },
                     modes: { type: Array, value: [] },
                     name: { type: String, observer: "nameChanged" },
-                    search: { type: Boolean, value: true },
+                    search: { type: Boolean, observer: "searchChanged", value: true },
                     indentation: { type: String },
                     history: { type: Boolean, value: false }
                 },
@@ -61,7 +61,7 @@ version: 1.0.5
                             search: this.search,
                             indentation: this.indentation,
 
-                            change: function editorChanged() {
+                            onChange: function editorChanged() {
                                 if (!that.editor) {
                                     return;
                                 }
@@ -109,6 +109,10 @@ version: 1.0.5
                     this.editor && this.editor.setMode(this.mode);
                 },
                 nameChanged: function nameChanged() {
+                    this.editor && this.editor.setName(this.name);
+                },
+                searchChanged: function searchChanged() {
+                    this.search = !(this.getAttribute('search') === 'false');
                     this.editor && this.editor.setName(this.name);
                 },
                 jsonChanged: function jsonChanged(newJson, oldJson) {
