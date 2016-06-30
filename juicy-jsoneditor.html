@@ -148,7 +148,7 @@ version: 1.0.5
                     }
 
                     if (!focused) {
-                        focused = document.querySelector("html /deep/ :focus");
+                        focused = this.$.jsoneditorContainer.querySelector(":focus");
                     }
 
                     var r = {
@@ -183,7 +183,7 @@ version: 1.0.5
                         var range = document.createRange();
                         var selection = window.getSelection();
 
-                        range.selectNodeContents(document.querySelector("html /deep/ :focus"));
+                        range.selectNodeContents(this.$.jsoneditorContainer.querySelector(":focus"));
                         range.collapse(false);
 
                         selection.removeAllRanges();
