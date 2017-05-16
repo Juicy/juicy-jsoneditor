@@ -19,6 +19,17 @@ version: 1.1.1
 
             #jsoneditorContainer {
                 height: 100%;
+                @apply(--juicy-jsoneditor-jsoneditorcontainer);
+            }
+
+            #jsoneditorContainer .jsoneditor-tree {
+                @apply(--juicy-jsoneditor-jsoneditor-tree);
+            }
+            #jsoneditorContainer .jsoneditor {
+                @apply(--juicy-jsoneditor-jsoneditor);
+            }
+            #jsoneditorContainer .jsoneditor-menu {
+                @apply(--juicy-jsoneditor-jsoneditor-menu);
             }
         </style>
         <div id="jsoneditorContainer"></div>
