@@ -77,6 +77,20 @@ Event    | event.details                                  | Description
 
 ## [Contributing and Development](CONTRIBUTING.md)
 
+## Styling
+
+The following custom properties and mixins are available for styling:
+
+| Custom property | Description | Default |
+|:----------------|:------------|:-------:|
+| --juicy-jsoneditor-jsoneditorcontainer | Empty mixin applied to the JSONEditor container | {} |
+| --juicy-jsoneditor-jsoneditor-tree | Empty mixin applied to `.jsoneditor-tree` | {} |
+| --juicy-jsoneditor-jsoneditor | Empty mixin applied to `.jsoneditor` | {} |
+| --juicy-jsoneditor-jsoneditor-tree | Empty mixin applied to `.jsoneditor-tree` | {} |
+| --juicy-jsoneditor-jsoneditor-menu | Empty mixin applied to `.jsoneditor-menu` | {} |
+
+The component also includes a Shared Style (Style Module) with ID `juicy-jsoneditor-shared-styles` to allow CSS customization from outside.
+
 ## History
 
 For detailed changelog, check [Releases](https://github.com/juicy/dummyCRM/releases).
