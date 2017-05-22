@@ -48,7 +48,12 @@ version: 1.1.1
                     name: { type: String, observer: "nameChanged" },
                     search: { type: Boolean, observer: "searchChanged", value: true },
                     indentation: { type: String },
-                    history: { type: Boolean, value: false }
+                    history: { type: Boolean, value: false },
+                    /**
+                     * Relative path to a CSS file with custom styles that will be loaded
+                     * after juicy-jsoneditor styles
+                     */
+                    pathToCustomStyles: { type: String }
                 },
                 editor: null,
                 observer: null,
@@ -109,6 +114,14 @@ version: 1.1.1
                     style.innerHTML = ["@import url('", url, "');"].join("");
 
                     Polymer.dom(this.root).appendChild(style);
+
+                    if (this.pathToCustomStyles) {
+                      var urlCustomStyles = Polymer.ResolveUrl.resolveUrl(this.pathToCustomStyles, script.ownerDocument.baseURI);
+                      var customStyles = document.createElement("style");
+                      customStyles.classList.add('juicy-jsoneditor-custom-styles');
+                      customStyles.innerHTML = ["@import url('", urlCustomStyles, "');"].join("");
+                      Polymer.dom(this.root).appendChild(customStyles);
+                    }
                 },
                 detached: function () {// unobserve when detached,
                     //so we will not have to perform any editor actions, it will get back to sync when re-attached
