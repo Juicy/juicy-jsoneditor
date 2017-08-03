@@ -75,6 +75,9 @@ Event    | event.details                                  | Description
 ---      | ---                                            | ---
 `change` | `{action: "JSONEditor-action", params: {..} }` | Triggers when json changes.
 
+## Notes
+- `juicy-jsoneditor` is a [hybrid element](https://www.polymer-project.org/2.0/docs/devguide/hybrid-elements). 
+
 ## [Contributing and Development](CONTRIBUTING.md)
 
 ## History
