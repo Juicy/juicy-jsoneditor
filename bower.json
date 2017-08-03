@@ -15,7 +15,7 @@
     "preview.png"
   ],
   "dependencies": {
-    "polymer": ">=1.5.0",
+    "polymer": "polymer#1.9 - 2",
     "jsoneditor": "josdejong/jsoneditor#^5.5.6",
     "fast-json-patch": "~1.0.0"
   },
