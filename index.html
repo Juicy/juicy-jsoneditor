@@ -7,6 +7,11 @@
 
     <!-- Importing Web Component's Polyfill -->
     <script src="../webcomponentsjs/webcomponents-lite.js"></script>
+    <script>
+    Polymer = {
+        dom: 'shadow'
+    };
+    </script>
 
     <!-- Importing Custom Elements -->
     <link rel="import" href="juicy-jsoneditor.html">
@@ -56,7 +61,7 @@
             float: right;
         }
 
-        div.juicy-jsoneditor {
+        div.juicy-element {
             margin: 20px 0px;
         }
     </style>
@@ -81,8 +86,8 @@
                         Please note, that <code>.json</code> itself does not have deep two-way binding, as <a href="https://github.com/josdejong/jsoneditor">josdejong/jsoneditor</a> does not notify on changes, just replaces entire object, so we mock it only on root level.
                     </p>
                 </div>
-                <div class="juicy-jsoneditor">
-                    <juicy-jsoneditor json="{{model.json::jsonchange}}"></juicy-jsoneditor>
+                <div class="juicy-element">
+                    <juicy-jsoneditor json="{{model.json}}"></juicy-jsoneditor>
                 </div>
                 <div class="markdown-body">
                     <h2>Examples</h2>
@@ -92,10 +97,10 @@
                         <div class="markdown-body">
                             <h3>With <code>name</code> attribute</h3>
                             <div class="code">
-                                <code>&lt;juicy-jsoneditor json="{&zwj;{json::change}}" name="MyName"&gt;&lt;/juicy-jsoneditor&gt;</code>
+                                <code>&lt;juicy-jsoneditor json="{&zwj;{json}}" name="MyName"&gt;&lt;/juicy-jsoneditor&gt;</code>
                             </div>
                         </div>
-                        <juicy-jsoneditor json="{{model.json::jsonchange}}" name="MyName"></juicy-jsoneditor>
+                        <juicy-jsoneditor json="{{model.json}}" name="MyName"></juicy-jsoneditor>
                     </section>
                     <section>
                         <div class="markdown-body">
@@ -157,6 +162,7 @@
             </template>
         </dom-bind>
         <script type="text/javascript">
+        document.addEventListener('WebComponentsReady', function(){
             var json = {
                 'array': [1, 2, 3],
                 'boolean': true,
@@ -174,6 +180,7 @@
             template.model = appModel;
             window.json = json;
             console.info("Play with me! I'm the `json` given to all those editors", json);
+        });
         </script>
     </article>
 </body>
