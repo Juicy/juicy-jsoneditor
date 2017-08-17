@@ -7,7 +7,11 @@ version: 1.1.1
 
 <link rel="import" href="../polymer/polymer.html">
 <script src="../jsoneditor/dist/jsoneditor.min.js"></script>
+<!-- <script src="../jsoneditor/dist/jsoneditor-minimalist.min.js"></script> -->
 <script src="../fast-json-patch/src/json-patch-duplex.js"></script>
+<!-- This is webpacked into ../jsoneditor/dist/jsoneditor.js,
+    but is executed async, and we need it before to prevent FOUC -->
+<script src="../jsoneditor/src/js/ace/theme-jsoneditor.js"></script>
 
 <!-- Define your custom element -->
 <dom-module id="juicy-jsoneditor">
@@ -44,6 +48,25 @@ version: 1.1.1
                 created: function () {
                     //force context for observers
                     this.refresh = this.refresh.bind(this);
+                },
+                ready: function(){
+                    //Adding styles bypassing Polymer scoping
+                    var url = Polymer.ResolveUrl.resolveUrl("../jsoneditor/dist/jsoneditor.min.css", script.ownerDocument.baseURI);
+                    var style = document.createElement("style");
+
+                    style.classList.add("juicy-jsoneditor-styles");
+                    style.innerHTML = ["@import url('", url, "');"].join("");
+                    Polymer.dom(this.root).appendChild(style);
+
+                    // Inject ACE themes and css added dynamically to the main document.
+                    if(this.shadowRoot){
+                        this.injectTheme('#ace_editor\\.css');
+                        this.injectTheme('#ace-tm');
+                        this.injectTheme('#ace_searchbox');
+                        ace.config.loadModule(['theme', 'ace/theme/jsoneditor'], ()=>{
+                            this.injectTheme('#ace-jsoneditor');
+                        });
+                    }
                 },
                 attached: function () {
                     if (this.editor) { // refresh editor when re-attached
@@ -89,15 +112,6 @@ version: 1.1.1
                             this[JSONEditorAPI[apiNo]] = this.editor[JSONEditorAPI[apiNo]].bind(this.editor);
                         }
                     }
-
-                    //Adding styles bypassing Polymer scoping
-                    var url = Polymer.ResolveUrl.resolveUrl("../jsoneditor/dist/jsoneditor.min.css", script.ownerDocument.baseURI);
-                    var style = document.createElement("style");
-
-                    style.classList.add("juicy-jsoneditor-styles");
-                    style.innerHTML = ["@import url('", url, "');"].join("");
-
-                    Polymer.dom(this.root).appendChild(style);
                 },
                 detached: function () {// unobserve when detached,
                     //so we will not have to perform any editor actions, it will get back to sync when re-attached
@@ -197,8 +211,20 @@ version: 1.1.1
                             }
                         }
                     }
+                },
+                injectTheme(themeId){
+                    var n = document.querySelector(themeId);
+                    this.shadowRoot.appendChild(cloneStyle(n));
                 }
             });
+
+            // helper function to clone a style
+            function cloneStyle(style) {
+                var s = document.createElement('style');
+                s.id = style.id;
+                s.textContent = style.textContent;
+                return s;
+            }
         }());
     </script>
 </dom-module>
