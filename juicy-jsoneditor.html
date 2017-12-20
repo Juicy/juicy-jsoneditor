@@ -18,13 +18,16 @@ version: 1.2.0
 <script>
     var currentScript = document._currentScript || document.currentScript;
     var ownerDocument = currentScript.ownerDocument;
-    var style = ownerDocument.querySelector('link[rel=stylesheet].juicy-jsoneditor-styles');
     var baseUrl = ownerDocument.baseURI;
-    var absoluteUrl = new URL(style.href, baseUrl);
 
-    style.href = absoluteUrl.href;
+    if (baseUrl.indexOf('juicy-jsoneditor') !== -1) {
+        var style = ownerDocument.querySelector('link[rel=stylesheet].juicy-jsoneditor-styles');
+        var absoluteUrl = new URL(style.href, baseUrl);
 
-    document.head.appendChild(style);
+        style.href = absoluteUrl.href;
+
+        document.head.appendChild(style);
+    }
 </script>
 
 <!-- Define your custom element -->
