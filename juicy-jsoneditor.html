@@ -13,6 +13,23 @@ version: 1.2.0
     but is executed async, and we need it before to prevent FOUC -->
 <script src="../jsoneditor/src/js/ace/theme-jsoneditor.js"></script>
 
+<link rel="stylesheet" href="../jsoneditor/dist/jsoneditor.min.css" class="juicy-jsoneditor-styles">
+
+<script>
+    var currentScript = document._currentScript || document.currentScript;
+    var ownerDocument = currentScript.ownerDocument;
+    var baseUrl = ownerDocument.baseURI;
+
+    if (baseUrl.indexOf('juicy-jsoneditor') !== -1) {
+        var style = ownerDocument.querySelector('link[rel=stylesheet].juicy-jsoneditor-styles');
+        var absoluteUrl = new URL(style.href, baseUrl);
+
+        style.href = absoluteUrl.href;
+
+        document.head.appendChild(style);
+    }
+</script>
+
 <!-- Define your custom element -->
 <dom-module id="juicy-jsoneditor">
     <template>
@@ -30,7 +47,6 @@ version: 1.2.0
     <script>
         (function () {
             var JSONEditorAPI = ["set", "setMode", "setName", "setText", "get", "getName", "getText"];
-            var script = document._currentScript || document.currentScript;
 
             Polymer({
                 is: 'juicy-jsoneditor',
@@ -50,14 +66,6 @@ version: 1.2.0
                     this.refresh = this.refresh.bind(this);
                 },
                 ready: function(){
-                    //Adding styles bypassing Polymer scoping
-                    var url = Polymer.ResolveUrl.resolveUrl("../jsoneditor/dist/jsoneditor.min.css", script.ownerDocument.baseURI);
-                    var style = document.createElement("style");
-
-                    style.classList.add("juicy-jsoneditor-styles");
-                    style.innerHTML = ["@import url('", url, "');"].join("");
-                    Polymer.dom(this.root).appendChild(style);
-
                     // Inject ACE themes and css added dynamically to the main document.
                     if(this.shadowRoot){
                         this.injectTheme('#ace_editor\\.css');
