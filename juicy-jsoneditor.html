@@ -13,23 +13,6 @@ version: 1.2.0
     but is executed async, and we need it before to prevent FOUC -->
 <script src="../jsoneditor/src/js/ace/theme-jsoneditor.js"></script>
 
-<link rel="stylesheet" href="../jsoneditor/dist/jsoneditor.min.css" class="juicy-jsoneditor-styles">
-
-<script>
-    var currentScript = document._currentScript || document.currentScript;
-    var ownerDocument = currentScript.ownerDocument;
-    var baseUrl = ownerDocument.baseURI;
-
-    if (baseUrl.indexOf('juicy-jsoneditor') !== -1) {
-        var style = ownerDocument.querySelector('link[rel=stylesheet].juicy-jsoneditor-styles');
-        var absoluteUrl = new URL(style.href, baseUrl);
-
-        style.href = absoluteUrl.href;
-
-        document.head.appendChild(style);
-    }
-</script>
-
 <!-- Define your custom element -->
 <dom-module id="juicy-jsoneditor">
     <template>
@@ -46,6 +29,11 @@ version: 1.2.0
     </template>
     <script>
         (function () {
+            // Resolve relative path to jsoneditor styles.
+            var stylesURI = '../jsoneditor/dist/jsoneditor.min.css';
+            var baseUrl = (document._currentScript || document.currentScript).ownerDocument.baseURI;
+            stylesURI = new URL(stylesURI, baseUrl);
+
             var JSONEditorAPI = ["set", "setMode", "setName", "setText", "get", "getName", "getText"];
 
             Polymer({
@@ -66,6 +54,13 @@ version: 1.2.0
                     this.refresh = this.refresh.bind(this);
                 },
                 ready: function(){
+                    //Adding styles bypassing Polymer scoping
+                    var style = document.createElement("style");
+
+                    style.classList.add("juicy-jsoneditor-styles");
+                    style.innerHTML = ["@import url('", stylesURI, "');"].join("");
+                    Polymer.dom(this.root).appendChild(style);
+
                     // Inject ACE themes and css added dynamically to the main document.
                     if(this.shadowRoot){
                         this.injectTheme('#ace_editor\\.css');
