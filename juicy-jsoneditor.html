@@ -6,12 +6,7 @@ version: 1.2.0
 -->
 
 <link rel="import" href="../polymer/polymer.html">
-<script src="../jsoneditor/dist/jsoneditor.min.js"></script>
-<!-- <script src="../jsoneditor/dist/jsoneditor-minimalist.min.js"></script> -->
-<script src="../fast-json-patch/src/json-patch-duplex.js"></script>
-<!-- This is webpacked into ../jsoneditor/dist/jsoneditor.js,
-    but is executed async, and we need it before to prevent FOUC -->
-<script src="../jsoneditor/src/js/ace/theme-jsoneditor.js"></script>
+<link rel="import" href="./juicy-jsoneditor-imports.html">
 
 <!-- Define your custom element -->
 <dom-module id="juicy-jsoneditor">
@@ -31,6 +26,7 @@ version: 1.2.0
         (function () {
             var JSONEditorAPI = ["set", "setMode", "setName", "setText", "get", "getName", "getText"];
             var script = document._currentScript || document.currentScript;
+            console.log(script);
 
             Polymer({
                 is: 'juicy-jsoneditor',
@@ -41,10 +37,9 @@ version: 1.2.0
                     name: { type: String, observer: "nameChanged" },
                     search: { type: Boolean, observer: "searchChanged", value: true },
                     indentation: { type: String },
-                    history: { type: Boolean, value: false }
+                    history: { type: Boolean, value: false },
+                    editor: {type: Object},
                 },
-                editor: null,
-                observer: null,
                 created: function () {
                     //force context for observers
                     this.refresh = this.refresh.bind(this);
@@ -63,9 +58,9 @@ version: 1.2.0
                         this.injectTheme('#ace_editor\\.css');
                         this.injectTheme('#ace-tm');
                         this.injectTheme('#ace_searchbox');
-                        ace.config.loadModule(['theme', 'ace/theme/jsoneditor'], ()=>{
+                        ace.config.loadModule(['theme', 'ace/theme/jsoneditor'], function(){
                             this.injectTheme('#ace-jsoneditor');
-                        });
+                        }.bind(this));
                     }
                 },
                 attached: function () {
@@ -212,7 +207,7 @@ version: 1.2.0
                         }
                     }
                 },
-                injectTheme(themeId){
+                injectTheme: function(themeId){
                     var n = document.querySelector(themeId);
                     this.shadowRoot.appendChild(cloneStyle(n));
                 }
