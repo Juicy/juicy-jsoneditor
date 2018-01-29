@@ -6,7 +6,7 @@ version: 1.2.0
 -->
 
 <link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="./juicy-jsoneditor-imports.html">
+<link rel="import" href="juicy-jsoneditor-imports.html">
 
 <!-- Define your custom element -->
 <dom-module id="juicy-jsoneditor">
@@ -26,7 +26,6 @@ version: 1.2.0
         (function () {
             var JSONEditorAPI = ["set", "setMode", "setName", "setText", "get", "getName", "getText"];
             var script = document._currentScript || document.currentScript;
-            console.log(script);
 
             Polymer({
                 is: 'juicy-jsoneditor',
