@@ -1,0 +1,24 @@
+language: node_js
+sudo: required
+dist: trusty
+before_script:
+- npm install -g web-component-tester
+- npm install bower
+- export PATH=$PWD/node_modules/.bin:$PATH
+- bower install
+node_js: 8
+addons:
+  firefox: latest
+  apt:
+    sources:
+    - google-chrome
+    packages:
+    - google-chrome-stable
+script:
+- xvfb-run wct --skip-plugin sauce
+- if [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then wct --skip-plugin local --plugin
+  sauce; fi
+env:
+  global:
+  - secure: M76LOLJfozJUw+mrk/1hE/hRdGidvmpyV98J2RelGhbgnJRetUi25+FtnFUAkxq42vnJTrmez05kk9+6pTGrjMKPDunJjhKvOBfw98/DfhUs4FEGDAIT0M64YVaCwORqzyFVG/0zEh1J2INHpvyHlVFZE705VtkCjzv8HTKz86s=
+  - secure: ltpk6vIn46sfySv+WEXt3ui1cfg0qalQ6mC37iG7Jrfs3KirdEKOr99xIqiJR6CBVBJ8FcQsXwdPbrIEl1xQTEf53bkVVT20a8AOmFH/FROdDgntQlqY1dNpz6vo0glVwS4yGoQ/ppBSU+Ysu/6lL1cKgFE//9jegxhYxCDYGx0=
