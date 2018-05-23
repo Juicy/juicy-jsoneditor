@@ -17,7 +17,7 @@
   "dependencies": {
     "polymer": "polymer#1.9 - 2",
     "jsoneditor": "^5.9.5",
-    "fast-json-patch": "~1.0.0"
+    "fast-json-patch": "^2.0.6"
   },
   "authors": [
     "Tomek Wytrebowicz <tomalecpub@gmail.com>"
