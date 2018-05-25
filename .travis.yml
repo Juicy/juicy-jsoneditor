@@ -2,7 +2,7 @@ language: node_js
 sudo: required
 dist: trusty
 before_script:
-- npm install -g web-component-tester
+- npm install web-component-tester
 - npm install bower
 - export PATH=$PWD/node_modules/.bin:$PATH
 - bower install
