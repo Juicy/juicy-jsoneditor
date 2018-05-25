@@ -27,7 +27,6 @@
         });
 
         it('should be upgraded element', function() {
-            expect(juicyElement).to.be.an.instanceOf(HTMLElement);
             expect(customElements.get('juicy-jsoneditor')).to.be.defined;
             expect(juicyElement).to.be.an.instanceOf(customElements.get('juicy-jsoneditor'));
         });
