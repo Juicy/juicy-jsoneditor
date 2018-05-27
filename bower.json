@@ -12,12 +12,18 @@
     "**/.*",
     "node_modules",
     "bower_components",
-    "preview.png"
+    "preview.png",
+    "package-lock.json",
+    "test",
+    "wct.conf.json"
   ],
   "dependencies": {
     "polymer": "polymer#1.9 - 2",
     "jsoneditor": "^5.9.5",
     "fast-json-patch": "~1.0.0"
+  },
+  "devDependencies": {
+    "web-component-tester": "^6.5.0"
   },
   "authors": [
     "Tomek Wytrebowicz <tomalecpub@gmail.com>"
