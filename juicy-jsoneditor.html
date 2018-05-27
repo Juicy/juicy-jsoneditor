@@ -8,7 +8,7 @@ version: 1.2.0
 <link rel="import" href="../polymer/polymer.html">
 <script src="../jsoneditor/dist/jsoneditor.min.js"></script>
 <!-- <script src="../jsoneditor/dist/jsoneditor-minimalist.min.js"></script> -->
-<script src="../fast-json-patch/src/json-patch-duplex.js"></script>
+<script src="../fast-json-patch/dist/fast-json-patch.min.js"></script>
 <!-- This is webpacked into ../jsoneditor/dist/jsoneditor.js,
     but is executed async, and we need it before to prevent FOUC -->
 <script src="../jsoneditor/src/js/ace/theme-jsoneditor.js"></script>
@@ -98,7 +98,7 @@ version: 1.2.0
                                 );
 
                                 that.observer && jsonpatch.unobserve(that.json, that.observer);
-                                jsonpatch.apply(that.json, patches);
+                                jsonpatch.applyPatch(that.json, patches);
                                 that.observer = jsonpatch.observe(that.json, that.refresh);
                             }
                         };

@@ -20,7 +20,7 @@
   "dependencies": {
     "polymer": "polymer#1.9 - 2",
     "jsoneditor": "^5.9.5",
-    "fast-json-patch": "~1.0.0"
+    "fast-json-patch": "^2.0.6"
   },
   "devDependencies": {
     "web-component-tester": "^6.5.0"
