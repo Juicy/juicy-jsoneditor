@@ -42,7 +42,7 @@ Or [download as ZIP](https://github.com/juicy/juicy-jsoneditor/archive/master.zi
 
 Attribute      | Options            | Default  | Description
 ---            | ---                | ---      | ---
-`json`         | *Object*           | `{}`     | JSON to edit.
+`json`         | *Object*           | `{}`     | JSON to edit. This could be object reference given via property or stringified JSON via attribute
 `mode`         | *String*           | `tree`   | Editing mode, see [API](https://github.com/josdejong/jsoneditor/blob/master/docs/api.md#constructor)
 `modes`        | *Array of Strings* |          | List of editing modes to be available, see [API](https://github.com/josdejong/jsoneditor/blob/master/docs/api.md#constructor)
 `name`         | *String*           |          | Object name, see [API](https://github.com/josdejong/jsoneditor/blob/master/docs/api.md#constructor)
