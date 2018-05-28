@@ -1,6 +1,6 @@
 {
     "name": "juicy-jsoneditor",
-    "version": "1.2.0",
+    "version": "1.3.0",
     "description": "Polymer Element that wraps josdejong/jsoneditor and adds two-way binding for edited JSON",
     "main": "juicy-jsoneditor.html",
     "private": true,
