@@ -1,5 +1,8 @@
 # &lt;juicy-jsoneditor&gt;
 
+[![Published on Vaadin  Directory](https://img.shields.io/badge/Vaadin%20Directory-published-00b4f0.svg)](https://vaadin.com/directory/component/Juicyjuicy-jsoneditor)
+[![Stars on Vaadin Directory](https://img.shields.io/vaadin-directory/star/Juicyjuicy-jsoneditor.svg)](https://vaadin.com/directory/component/Juicyjuicy-jsoneditor)
+
 > Polymer Element that wraps [josdejong/jsoneditor](http://github.com/josdejong/jsoneditor) and adds two-way binding for edited JSON.
 
 ## Demo
