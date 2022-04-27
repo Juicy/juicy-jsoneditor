@@ -8,7 +8,7 @@
         "test": "wct"
     },
     "devDependencies": {
-        "grunt": "^1.1.0",
+        "grunt": "^1.5.2",
         "grunt-bump": "^0.8.0",
         "grunt-cli": "^1.2.0",
         "grunt-contrib-connect": "^1.0.2",
